@@ -1,28 +1,24 @@
+"use client";
 import React, { useEffect, useRef, useState } from "react";
 import { MdShoppingBasket } from "react-icons/md";
 import { motion } from "framer-motion";
-import NotFound from "@/public/img/NotFound.svg";
 import { setCart } from "@/redux/features/cart-slice";
 import { useAppSelector } from "@/redux/store";
 import { useDispatch } from "react-redux";
 import Image from "next/image";
 import Fi1 from "@/public/img/fi1.png";
 import { IMenu } from "@/types/type";
+import MainContainer from "@/components/layout/mainContainer/MainContainer";
+import FoodCarousel from "@/components/sections/carousel/foodCarousel/FoodCarousel";
+import Menu from "@/services/menu";
+import { setMenu } from "@/redux/features/menu-slice";
 
-export interface IRowContainer {
-  flag: boolean;
-  scrollValue?: number;
-  data: IMenu[];
-}
-
-const RowContainer = ({ flag, data, scrollValue }: IRowContainer) => {
-  const rowContainer = useRef<HTMLDivElement | null>(null);
+const MenuPage = () => {
+  const { menu } = useAppSelector((state) => state.menuReducer.value);
   const dispatch = useDispatch();
-
   const { items: cartItems } = useAppSelector(
     (state) => state.cartReducer.value
   );
-
   const addToCart = (item: IMenu) => {
     const updatedCartItems = cartItems.map((cartItem) => {
       if (cartItem.item._id === item._id) {
@@ -37,23 +33,36 @@ const RowContainer = ({ flag, data, scrollValue }: IRowContainer) => {
 
     dispatch(setCart(updatedCartItems));
   };
+  const images = [
+    "/img/food-image1.jpg",
+    "/img/food-image2.jpg",
+    "/img/food-image3.jpg",
+  ];
+  console.log(menu);
 
-  useEffect(() => {
-    if (rowContainer.current) {
-      (rowContainer.current as HTMLDivElement).scrollLeft += scrollValue || 0;
+  const getAllMenuItems = async () => {
+    try {
+      const data = await Menu.getAllMenuItems();
+      console.log(data);
+      if (data.status === 200) {
+        dispatch(setMenu(data.menu));
+      }
+    } catch (error) {
+      console.log(error);
     }
-  }, [scrollValue]);
+  };
+  useEffect(() => {
+    getAllMenuItems();
+  }, []);
   return (
-    <div
-      ref={rowContainer}
-      className={`w-full flex items-center gap-3  my-12 scroll-smooth  ${
-        flag
-          ? "overflow-x-scroll scrollbar-none"
-          : "overflow-x-hidden flex-wrap justify-center"
-      }`}
-    >
-      {data && data.length > 0 ? (
-        data.map((item) => (
+    <MainContainer>
+      <div className="my-10">
+        <FoodCarousel images={images} />
+      </div>
+
+      <h1 className="text-3xl text-white text-center font-bold ">Menu Items</h1>
+      <div className="min-h-[100vh] flex gap-4 mt-10 flex-wrap">
+        {menu.map((item) => (
           <div
             key={item?._id}
             className="w-375 h-[350px] min-w-[375px] md:w-450 md:min-w-[450px] bg-darkCardOverlay rounded-2xl py-4 px-6 my-12 backdrop-blur-lg hover:drop-shadow-lg flex flex-col items-center justify-between relative"
@@ -97,17 +106,10 @@ const RowContainer = ({ flag, data, scrollValue }: IRowContainer) => {
               </motion.div>
             </div>
           </div>
-        ))
-      ) : (
-        <div className="w-full flex flex-col items-center justify-center">
-          <Image src={NotFound} alt="not-found" className="h-340" />
-          <p className="text-xl text-headingColor font-semibold my-2">
-            Items Not Available
-          </p>
-        </div>
-      )}
-    </div>
+        ))}
+      </div>
+    </MainContainer>
   );
 };
 
-export default RowContainer;
+export default MenuPage;

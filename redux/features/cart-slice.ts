@@ -1,5 +1,4 @@
-import { ICartItem } from "@/components/sections/cart/cartItem/CartItem";
-import { IMenu } from "@/types/type";
+import { ICartItem } from "@/types/type";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface InitialState {

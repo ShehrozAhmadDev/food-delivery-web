@@ -6,23 +6,24 @@ export interface IMessage {
     conversationId: string | null;
 }
 
-export interface ICartItems {
+export interface ICartItem {
     item: IMenu,
     quantity: number;
 }
 
 
 export interface IOrders {
-    _id: string;
-    startTime: string | Date;
-    endTime: string | Date;
+    _id?: string;
+    startTime?: string | Date;
+    endTime?: string | Date;
     address: string;
-    status: string;
+    status?: string;
     phone: string;
-    item: {menuItem: IMenu, quantity: number, addOns: IAddOnItem[]}[]
-    createdBy: IUser;
-    createdAt: string | Date;
-    updatedAt: string | Date;
+    city: string;
+    item?: {menuItem: IMenu, quantity: number, addOns: IAddOnItem[]}[]
+    createdBy?: IUser;
+    createdAt?: string | Date;
+    updatedAt?: string | Date;
   }
   
 

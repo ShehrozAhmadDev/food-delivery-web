@@ -1,19 +1,26 @@
 import React, { useEffect, useState } from "react";
 import { MdOutlineKeyboardBackspace } from "react-icons/md";
 import { RiRefreshFill } from "react-icons/ri";
-
 import { motion } from "framer-motion";
-import EmptyCart from "../img/emptyCart.svg";
+import EmptyCart from "../../../../public/img/emptyCart.svg";
 import { useAppSelector } from "@/redux/store";
 import { setCart, setShowCart } from "@/redux/features/cart-slice";
 import { useDispatch } from "react-redux";
-import CartItem from "../cartItem/CartItem";
+import CartItem from "../cartItemComp/CartItemComp";
+import CartItemComp from "../cartItemComp/CartItemComp";
+import PlaceOrderModal from "@/components/modals/PlaceOrderModal/PlaceOrderModal";
+import { useRouter } from "next/navigation";
 
 const CartContainer = () => {
+  const [isOrderOpen, setIsOrderOpen] = useState(false);
   const dispatch = useDispatch();
-  const { cartShow, items: cartItems } = useAppSelector(
+  const router = useRouter();
+
+  const { cartShow, items } = useAppSelector(
     (state) => state.cartReducer.value
   );
+  const { user } = useAppSelector((state) => state.userReducer.value);
+  console.log({ items });
   const [flag, setFlag] = useState(1);
   const [tot, setTot] = useState(0);
 
@@ -22,16 +29,19 @@ const CartContainer = () => {
   };
 
   useEffect(() => {
-    let totalPrice = cartItems.reduce(function (accumulator, item) {
-      return accumulator + item?.quantity * item.price;
-    }, 0);
-    setTot(totalPrice);
-    console.log(tot);
-  }, [tot, flag]);
-
+    if (items && items.length > 0) {
+      const totalPrice = items.reduce(
+        (accumulator, item) =>
+          accumulator + (item.quantity || 0) * item.item.price,
+        0
+      );
+      setTot(totalPrice);
+    } else {
+      setTot(0); // Set total to 0 when there are no items in the cart
+    }
+  }, [items, flag]);
   const clearCart = () => {
     dispatch(setCart([]));
-
     localStorage.setItem("cartItems", JSON.stringify([]));
   };
 
@@ -40,7 +50,7 @@ const CartContainer = () => {
       initial={{ opacity: 0, x: 200 }}
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: 200 }}
-      className="fixed top-0 right-0 w-full md:w-375 h-screen bg-primary drop-shadow-md flex flex-col z-[101]"
+      className="fixed top-0 right-0 w-full md:w-375 h-screen bg-cartBg drop-shadow-md flex flex-col z-[101]"
     >
       <div className="w-full flex items-center justify-between p-4 cursor-pointer">
         <motion.div whileTap={{ scale: 0.75 }} onClick={showCart}>
@@ -50,7 +60,7 @@ const CartContainer = () => {
 
         <motion.p
           whileTap={{ scale: 0.75 }}
-          className="flex items-center gap-2 p-1 px-2 my-2 bg-gray-100 rounded-md hover:shadow-md  cursor-pointer text-textColor text-base"
+          className="flex items-center gap-2 p-1 px-2 my-2 bg-orange-600 rounded-md hover:shadow-md  cursor-pointer text-textColor text-base"
           onClick={clearCart}
         >
           Clear <RiRefreshFill />
@@ -58,20 +68,15 @@ const CartContainer = () => {
       </div>
 
       {/* bottom section */}
-      {cartItems && cartItems.length > 0 ? (
+      {items && items.length > 0 ? (
         <div className="w-full h-full bg-cartBg rounded-t-[2rem] flex flex-col">
           {/* cart Items section */}
           <div className="w-full h-340 md:h-42 px-6 py-10 flex flex-col gap-3 overflow-y-scroll scrollbar-none">
             {/* cart Item */}
-            {cartItems &&
-              cartItems.length > 0 &&
-              cartItems.map((item) => (
-                <CartItem
-                  key={item._id}
-                  item={item}
-                  setFlag={setFlag}
-                  flag={flag}
-                />
+            {items &&
+              items.length > 0 &&
+              items.map((item, inde) => (
+                <CartItemComp flag={flag} setFlag={setFlag} item={item} />
               ))}
           </div>
 
@@ -95,11 +100,12 @@ const CartContainer = () => {
               </p>
             </div>
 
-            {true ? (
+            {user ? (
               <motion.button
                 whileTap={{ scale: 0.8 }}
                 type="button"
                 className="w-full p-2 rounded-full bg-gradient-to-tr from-orange-400 to-orange-600 text-gray-50 text-lg my-2 hover:shadow-lg"
+                onClick={() => setIsOrderOpen(true)}
               >
                 Check Out
               </motion.button>
@@ -108,6 +114,7 @@ const CartContainer = () => {
                 whileTap={{ scale: 0.8 }}
                 type="button"
                 className="w-full p-2 rounded-full bg-gradient-to-tr from-orange-400 to-orange-600 text-gray-50 text-lg my-2 hover:shadow-lg"
+                onClick={() => router.push("/login")}
               >
                 Login to check out
               </motion.button>
@@ -122,6 +129,12 @@ const CartContainer = () => {
           </p>
         </div>
       )}
+      <>
+        <PlaceOrderModal
+          isOpen={isOrderOpen}
+          closeModal={() => setIsOrderOpen(false)}
+        />
+      </>
     </motion.div>
   );
 };

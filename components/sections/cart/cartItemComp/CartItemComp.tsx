@@ -4,58 +4,78 @@ import { motion } from "framer-motion";
 import { useDispatch } from "react-redux";
 import { useAppSelector } from "@/redux/store";
 import { setCart } from "@/redux/features/cart-slice";
-import { IMenu } from "@/redux/features/menu-slice";
+import { ICartItem } from "@/types/type";
 
-let items: IMenu[] = [];
+let items: ICartItem[] = [];
 
-export interface ICartItem {
-  item: IMenu;
+export interface ICartItemProps {
+  item: ICartItem;
   setFlag: (value: number) => void;
   flag: number;
 }
 
-const CartItem = ({ item, setFlag, flag }: ICartItem) => {
+const CartItemComp = ({ item, setFlag, flag }: ICartItemProps) => {
   const [qty, setQty] = useState(item.quantity || 0);
   const dispatch = useDispatch();
   const { items: cartItems } = useAppSelector(
     (state) => state.cartReducer.value
   );
 
-  const cartDispatch = () => {
+  const cartDispatch = (items: ICartItem[]) => {
     localStorage.setItem("cartItems", JSON.stringify(items));
+
     dispatch(setCart(items));
   };
 
   const updateQty = (action: string, id?: string) => {
-    if (action == "add") {
+    if (action === "add") {
       setQty(qty + 1);
-      cartItems &&
-        cartItems.map((item) => {
-          if (item._id === id) {
-            if (item.quantity) item.quantity = item.quantity + 1;
-            setFlag(flag + 1);
-          }
-        });
-      cartDispatch();
+
+      const updatedItems = cartItems.map((cartItem) => {
+        if (cartItem.item._id === id) {
+          return { ...cartItem, quantity: (cartItem.quantity || 0) + 1 };
+        }
+        return cartItem;
+      });
+
+      if (!updatedItems.some((item) => item.item._id === id)) {
+        // If the item is not in the cart, add it
+        updatedItems.push({ item: item.item, quantity: 1 });
+      }
+
+      setFlag(flag + 1);
+      cartDispatch(updatedItems);
     } else {
-      // initial state value is one so you need to check if 1 then remove it
-      if (qty == 1) {
-        items = cartItems && cartItems.filter((item) => item._id !== id);
+      if (qty === 1) {
+        const updatedItems = cartItems
+          .map((cartItem) => {
+            if (cartItem.item._id === id) {
+              if (cartItem.quantity && cartItem.quantity > 1) {
+                return { ...cartItem, quantity: cartItem.quantity - 1 };
+              }
+            }
+            return cartItem;
+          })
+          .filter((cartItem) => cartItem.item._id !== id);
+
         setFlag(flag + 1);
-        cartDispatch();
+        cartDispatch(updatedItems);
       } else {
         setQty(qty - 1);
-        cartItems.map((item) => {
-          if (item._id === id) {
-            if (item.quantity) item.quantity -= 1;
-            setFlag(flag + 1);
+        const updatedItems = cartItems.map((cartItem) => {
+          if (cartItem.item._id === id) {
+            if (cartItem.quantity) {
+              return { ...cartItem, quantity: cartItem.quantity - 1 };
+            }
           }
+          return cartItem;
         });
-        cartDispatch();
+
+        setFlag(flag + 1);
+        cartDispatch(updatedItems);
       }
     }
   };
-
   useEffect(() => {
     items = cartItems;
   }, [qty, items]);
@@ -63,18 +83,16 @@ const CartItem = ({ item, setFlag, flag }: ICartItem) => {
   return (
     <div className="w-full p-1 px-2 rounded-lg bg-cartItem flex items-center gap-2">
       <img
-        src={
-          "https://www.foodandwine.com/thmb/pwFie7NRkq4SXMDJU6QKnUKlaoI=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/Ultimate-Veggie-Burgers-FT-Recipe-0821-5d7532c53a924a7298d2175cf1d4219f.jpg"
-        }
+        src={item.item.imageUrl}
         className="w-20 h-20 max-w-[60px] rounded-full object-contain"
         alt=""
       />
 
       {/* name section */}
       <div className="flex flex-col gap-2">
-        <p className="text-base text-gray-50">{item?.name}</p>
+        <p className="text-base text-gray-50">{item?.item.name}</p>
         <p className="text-sm block text-gray-300 font-semibold">
-          $ {item?.price * qty}
+          $ {item?.item.price * qty}
         </p>
       </div>
 
@@ -82,7 +100,7 @@ const CartItem = ({ item, setFlag, flag }: ICartItem) => {
       <div className="group flex items-center gap-2 ml-auto cursor-pointer">
         <motion.div
           whileTap={{ scale: 0.75 }}
-          onClick={() => updateQty("remove", item?._id)}
+          onClick={() => updateQty("remove", item?.item._id)}
         >
           <BiMinus className="text-gray-50 " />
         </motion.div>
@@ -93,7 +111,7 @@ const CartItem = ({ item, setFlag, flag }: ICartItem) => {
 
         <motion.div
           whileTap={{ scale: 0.75 }}
-          onClick={() => updateQty("add", item?._id)}
+          onClick={() => updateQty("add", item?.item._id)}
         >
           <BiPlus className="text-gray-50 " />
         </motion.div>
@@ -102,4 +120,4 @@ const CartItem = ({ item, setFlag, flag }: ICartItem) => {
   );
 };
 
-export default CartItem;
+export default CartItemComp;

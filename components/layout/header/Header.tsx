@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import React, { useState } from "react";
-
+import Cookie from "js-cookie";
 import Logo from "@/public/img/logo.png";
 import Avatar from "@/public/img/avatar.png";
 import { MdShoppingBasket, MdAdd, MdLogout } from "react-icons/md";
@@ -10,6 +10,9 @@ import Image from "next/image";
 import { useAppSelector } from "@/redux/store";
 import { useDispatch } from "react-redux";
 import { setCart, setShowCart } from "@/redux/features/cart-slice";
+import { setUser } from "@/redux/features/user-slice";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 const Header = () => {
   const [isMenu, setIsMenu] = useState(false);
@@ -17,13 +20,19 @@ const Header = () => {
     (state) => state.cartReducer.value
   );
 
+  const router = useRouter();
+
   const { user } = useAppSelector((state) => state.userReducer.value);
-  console.log(user);
   const dispatch = useDispatch();
 
-  const login = async () => {};
-
-  const logout = () => {};
+  const logout = () => {
+    dispatch(setUser(null));
+    dispatch(setCart([]));
+    Cookie.remove("token");
+    Cookie.remove("role");
+    toast.success("logging out...");
+    router.refresh();
+  };
 
   const showCart = () => {
     dispatch(setShowCart(!cartShow));
@@ -81,7 +90,7 @@ const Header = () => {
                 className="w-10 min-w-[40px] h-10 min-h-[40px] drop-shadow-xl cursor-pointer rounded-full"
                 alt="userprofile"
                 onClick={() => {
-                  setIsMenu(true);
+                  setIsMenu(!isMenu);
                 }}
               />
               {isMenu && (
@@ -139,7 +148,9 @@ const Header = () => {
             src={Avatar}
             className="w-10 min-w-[40px] h-10 min-h-[40px] drop-shadow-xl cursor-pointer rounded-full"
             alt="userprofile"
-            onClick={login}
+            onClick={() => {
+              setIsMenu(!isMenu);
+            }}
           />
           {isMenu && (
             <motion.div

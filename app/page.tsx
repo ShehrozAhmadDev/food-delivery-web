@@ -6,26 +6,25 @@ import React, { useEffect, useState } from "react";
 import { useAppSelector } from "@/redux/store";
 import RowContainer from "@/components/sections/landing/rowContainer/RowContainer";
 import MenuContainer from "@/components/sections/landing/menuContainer/MenuContainer";
-import CartContainer from "@/components/sections/landing/cartContainer/CartContainer";
 import MainContainer from "@/components/layout/mainContainer/MainContainer";
 import Menu from "@/services/menu";
 import Cookie from "js-cookie";
 import { useDispatch } from "react-redux";
 import { setMenu } from "@/redux/features/menu-slice";
-import { initialMenuItems } from "@/constants/data";
+import CartContainer from "@/components/sections/cart/cartContainer/CartContainer";
 
 const Home = () => {
   let token = Cookie?.get("token");
 
   const [scrollValue, setScrollValue] = useState(0);
-  const { cartShow } = useAppSelector((state) => state.cartReducer.value);
+  const { items } = useAppSelector((state) => state.cartReducer.value);
   const { menu, filteredMenu, categories, featuredMenu } = useAppSelector(
     (state) => state.menuReducer.value
   );
   const dispatch = useDispatch();
   const getAllMenuItems = async () => {
     try {
-      const data = await Menu.getAllMenuItems(token);
+      const data = await Menu.getAllMenuItems();
       console.log(data);
       if (data.status === 200) {
         dispatch(setMenu(data.menu));
@@ -34,7 +33,7 @@ const Home = () => {
       console.log(error);
     }
   };
-
+  console.log({ items });
   useEffect(() => {
     getAllMenuItems();
   }, []);
@@ -75,8 +74,6 @@ const Home = () => {
         </section>
 
         <MenuContainer categories={categories} menuData={filteredMenu} />
-
-        {cartShow && <CartContainer />}
       </div>
     </MainContainer>
   );

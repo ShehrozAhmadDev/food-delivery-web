@@ -61,7 +61,7 @@ const MenuContainer = ({ categories, menuData }: IMenuContainer) => {
         </div>
 
         <div className="w-full">
-          <RowContainer flag={true} data={menuData} />
+          <RowContainer flag={false} data={menuData} />
         </div>
       </div>
     </section>
