@@ -12,11 +12,16 @@ import Cookie from "js-cookie";
 import { useDispatch } from "react-redux";
 import { setMenu } from "@/redux/features/menu-slice";
 import CartContainer from "@/components/sections/cart/cartContainer/CartContainer";
+import AddToCartModal from "@/components/modals/AddToCartModal/AddToCartModal";
+import Addon from "@/services/addon";
+import { setAddon } from "@/redux/features/addon-slice";
 
 const Home = () => {
   let token = Cookie?.get("token");
 
   const [scrollValue, setScrollValue] = useState(0);
+  const [openCartModal, setOpenCartModal] = useState(false);
+  const [clickedItem, setClickedItem] = useState();
   const { items } = useAppSelector((state) => state.cartReducer.value);
   const { menu, filteredMenu, categories, featuredMenu } = useAppSelector(
     (state) => state.menuReducer.value
@@ -25,7 +30,6 @@ const Home = () => {
   const getAllMenuItems = async () => {
     try {
       const data = await Menu.getAllMenuItems();
-      console.log(data);
       if (data.status === 200) {
         dispatch(setMenu(data.menu));
       }
@@ -33,9 +37,19 @@ const Home = () => {
       console.log(error);
     }
   };
-  console.log({ items });
+  const getAllAddonItems = async () => {
+    try {
+      const data = await Addon.getAllAddonItems();
+      if (data.status === 200) {
+        dispatch(setAddon(data.addon));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   useEffect(() => {
     getAllMenuItems();
+    getAllAddonItems();
   }, []);
 
   return (
@@ -45,21 +59,21 @@ const Home = () => {
 
         <section className="w-full my-6">
           <div className="w-full flex items-center justify-between">
-            <p className="text-2xl font-semibold capitalize text-headingColor relative before:absolute before:rounded-lg before:content before:w-32 before:h-1 before:-bottom-2 before:left-0 before:bg-gradient-to-tr from-orange-400 to-orange-600 transition-all ease-in-out duration-100">
+            <p className="text-2xl font-semibold capitalize text-headingColor relative before:absolute before:rounded-lg before:content before:w-32 before:h-1 before:-bottom-2 before:left-0 before:bg-gradient-to-tr from-red-400 to-red-600 transition-all ease-in-out duration-100">
               Our top picks
             </p>
 
             <div className="hidden md:flex gap-3 items-center">
               <motion.div
                 whileTap={{ scale: 0.75 }}
-                className="w-8 h-8 rounded-lg bg-orange-300 hover:bg-orange-500 cursor-pointer  hover:shadow-lg flex items-center justify-center"
+                className="w-8 h-8 rounded-lg bg-red-600 hover:bg-red-500 cursor-pointer  hover:shadow-lg flex items-center justify-center"
                 onClick={() => setScrollValue(-200)}
               >
                 <MdChevronLeft className="text-lg text-white" />
               </motion.div>
               <motion.div
                 whileTap={{ scale: 0.75 }}
-                className="w-8 h-8 rounded-lg bg-orange-300 hover:bg-orange-500 cursor-pointer transition-all duration-100 ease-in-out hover:shadow-lg flex items-center justify-center"
+                className="w-8 h-8 rounded-lg bg-red-600 hover:bg-red-500 cursor-pointer transition-all duration-100 ease-in-out hover:shadow-lg flex items-center justify-center"
                 onClick={() => setScrollValue(200)}
               >
                 <MdChevronRight className="text-lg text-white" />
@@ -69,12 +83,21 @@ const Home = () => {
           <RowContainer
             scrollValue={scrollValue}
             flag={true}
+            setOpenCartModal={setOpenCartModal}
             data={featuredMenu}
           />
         </section>
 
-        <MenuContainer categories={categories} menuData={filteredMenu} />
+        <MenuContainer
+          categories={categories}
+          menuData={filteredMenu}
+          setOpenCartModal={setOpenCartModal}
+        />
       </div>
+      <AddToCartModal
+        isOpen={openCartModal}
+        closeModal={() => setOpenCartModal(false)}
+      />
     </MainContainer>
   );
 };

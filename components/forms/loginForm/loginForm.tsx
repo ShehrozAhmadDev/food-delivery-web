@@ -18,8 +18,6 @@ const LoginForm = () => {
     e.preventDefault();
     Login.postLogin(email, password)
       .then((data) => {
-        console.log(data);
-
         Cookie.set("token", data?.token);
         Cookie.set("role", data?.user?.role);
         dispatch(
@@ -68,7 +66,7 @@ const LoginForm = () => {
           </div>
           <button
             type="submit"
-            className="w-full bg-gradient-to-r from-orange-600 to-orange-300 py-3 rounded-md hover:opacity-80 transition-all duration-300"
+            className="w-full bg-gradient-to-r from-red-600 to-red-300 py-3 rounded-md hover:opacity-80 transition-all duration-300"
           >
             Login
           </button>
@@ -76,7 +74,7 @@ const LoginForm = () => {
         <span className="w-full flex justify-end items-center mt-5 space-x-2">
           <p className="text-sm text-white/[.60]">You don't have an account?</p>
           <Link
-            className="underline w-fit font-bold cursor-pointer text-orange-500  hover:opacity-85 "
+            className="underline w-fit font-bold cursor-pointer text-red-500  hover:opacity-85 "
             href="/signup"
           >
             SignUp

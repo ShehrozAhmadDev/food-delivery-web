@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
-import { MdShoppingBasket } from "react-icons/md";
+import { MdShoppingCart } from "react-icons/md";
 import { motion } from "framer-motion";
 import NotFound from "@/public/img/NotFound.svg";
-import { setCart } from "@/redux/features/cart-slice";
+import { setCart, setSelectedCartItem } from "@/redux/features/cart-slice";
 import { useAppSelector } from "@/redux/store";
 import { useDispatch } from "react-redux";
 import Image from "next/image";
@@ -13,30 +13,35 @@ export interface IRowContainer {
   flag: boolean;
   scrollValue?: number;
   data: IMenu[];
+  setOpenCartModal: (item: boolean) => void;
 }
 
-const RowContainer = ({ flag, data, scrollValue }: IRowContainer) => {
+const RowContainer = ({
+  flag,
+  data,
+  scrollValue,
+  setOpenCartModal,
+}: IRowContainer) => {
   const rowContainer = useRef<HTMLDivElement | null>(null);
   const dispatch = useDispatch();
-
   const { items: cartItems } = useAppSelector(
     (state) => state.cartReducer.value
   );
 
-  const addToCart = (item: IMenu) => {
-    const updatedCartItems = cartItems.map((cartItem) => {
-      if (cartItem.item._id === item._id) {
-        return { ...cartItem, quantity: (cartItem.quantity || 0) + 1 };
-      }
-      return cartItem;
-    });
+  // const addToCart = (item: IMenu) => {
+  //   const updatedCartItems = cartItems.map((cartItem) => {
+  //     if (cartItem.item._id === item._id) {
+  //       return { ...cartItem, quantity: (cartItem.quantity || 0) + 1 };
+  //     }
+  //     return cartItem;
+  //   });
 
-    if (!updatedCartItems.some((cartItem) => cartItem.item._id === item._id)) {
-      updatedCartItems.push({ item: item, quantity: 1 });
-    }
+  //   if (!updatedCartItems.some((cartItem) => cartItem.item._id === item._id)) {
+  //     updatedCartItems.push({ item: item, quantity: 1 });
+  //   }
 
-    dispatch(setCart(updatedCartItems));
-  };
+  //   dispatch(setCart(updatedCartItems));
+  // };
 
   useEffect(() => {
     if (rowContainer.current) {
@@ -56,7 +61,7 @@ const RowContainer = ({ flag, data, scrollValue }: IRowContainer) => {
         data.map((item) => (
           <div
             key={item?._id}
-            className="w-375 h-[350px] min-w-[375px] md:w-450 md:min-w-[450px] bg-darkCardOverlay rounded-2xl py-4 px-6 my-12 backdrop-blur-lg hover:drop-shadow-lg flex flex-col items-center justify-between relative"
+            className="w-375 h-[350px] min-w-[375px] md:w-450 md:min-w-[450px] bg-red-700 rounded-2xl py-4 px-6 my-12 backdrop-blur-lg hover:drop-shadow-lg flex flex-col items-center justify-between relative"
           >
             <div className="w-full flex items-center justify-center">
               <motion.div
@@ -88,12 +93,15 @@ const RowContainer = ({ flag, data, scrollValue }: IRowContainer) => {
               </div>
               <motion.div
                 whileTap={{ scale: 0.75 }}
-                className="w-10 h-10 rounded-full bg-red-600 flex items-center justify-center cursor-pointer hover:shadow-md -mt-12 absolute right-0 bottom-0"
+                className="w-10 h-10 rounded-full bg-card flex items-center justify-center cursor-pointer hover:shadow-md -mt-12 absolute right-0 bottom-0"
                 onClick={() => {
-                  addToCart(item);
+                  const cartItem = { item: item, quantity: 1, addOns: [] };
+                  dispatch(setSelectedCartItem(cartItem));
+                  // addToCart(item);
+                  setOpenCartModal(true);
                 }}
               >
-                <MdShoppingBasket className="text-white" />
+                <MdShoppingCart className="text-white" />
               </motion.div>
             </div>
           </div>

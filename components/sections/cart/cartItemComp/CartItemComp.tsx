@@ -40,7 +40,7 @@ const CartItemComp = ({ item, setFlag, flag }: ICartItemProps) => {
 
       if (!updatedItems.some((item) => item.item._id === id)) {
         // If the item is not in the cart, add it
-        updatedItems.push({ item: item.item, quantity: 1 });
+        updatedItems.push({ item: item.item, quantity: 1, addOns: [] });
       }
 
       setFlag(flag + 1);
@@ -78,43 +78,76 @@ const CartItemComp = ({ item, setFlag, flag }: ICartItemProps) => {
   };
   useEffect(() => {
     items = cartItems;
+    const quat = cartItems.find((cartItem) => {
+      if (cartItem.item._id === item.item._id) {
+        return cartItem.quantity;
+      }
+    });
+
+    setQty(quat?.quantity || 1);
   }, [qty, items]);
 
   return (
-    <div className="w-full p-1 px-2 rounded-lg bg-cartItem flex items-center gap-2">
-      <img
-        src={item.item.imageUrl}
-        className="w-20 h-20 max-w-[60px] rounded-full object-contain"
-        alt=""
-      />
+    <div>
+      <div className="w-full p-1 px-2 rounded-lg bg-cartItem flex items-center gap-2">
+        <img
+          src={item.item.imageUrl}
+          className="w-20 h-20 max-w-[60px] rounded-full object-contain"
+          alt=""
+        />
 
-      {/* name section */}
-      <div className="flex flex-col gap-2">
-        <p className="text-base text-gray-50">{item?.item.name}</p>
-        <p className="text-sm block text-gray-300 font-semibold">
-          $ {item?.item.price * qty}
-        </p>
+        {/* name section */}
+        <div className="flex flex-col gap-2">
+          <p className="text-base text-gray-50">{item?.item.name}</p>
+          <p className="text-sm block text-gray-300 font-semibold">
+            Rs. {item?.item.price * item.quantity}
+          </p>
+        </div>
+
+        {/* button section */}
+        <div className="group flex items-center gap-2 ml-auto cursor-pointer">
+          <motion.div
+            whileTap={{ scale: 0.75 }}
+            onClick={() => updateQty("remove", item?.item._id)}
+          >
+            <BiMinus className="text-gray-50 bg-red-700 p-2 text-3xl rounded-md " />
+          </motion.div>
+
+          <p className="w-5 h-5 rounded-sm bg-cartBg text-gray-50 flex items-center justify-center">
+            {item.quantity}
+          </p>
+
+          <motion.div
+            whileTap={{ scale: 0.75 }}
+            onClick={() => updateQty("add", item?.item._id)}
+          >
+            <BiPlus className="text-gray-50 bg-red-700 p-2 text-3xl rounded-md " />
+          </motion.div>
+        </div>
       </div>
+      <div>
+        {item.addOns.map((addon) => (
+          <div className="w-full p-1 px-2 rounded-lg bg-white/10 flex items-center gap-2">
+            <img
+              src={addon.addOnId.imageUrl}
+              className="w-6 h-6 max-w-[60px] rounded-full object-contain"
+              alt=""
+            />
 
-      {/* button section */}
-      <div className="group flex items-center gap-2 ml-auto cursor-pointer">
-        <motion.div
-          whileTap={{ scale: 0.75 }}
-          onClick={() => updateQty("remove", item?.item._id)}
-        >
-          <BiMinus className="text-gray-50 " />
-        </motion.div>
+            {/* name section */}
+            <div className="flex flex-col gap-2">
+              <p className="text-base text-gray-50">{addon?.addOnId.name}</p>
+              <p className="text-sm block text-gray-300 font-semibold">
+                Rs. {addon?.addOnId.price * addon.quantity}
+              </p>
+            </div>
 
-        <p className="w-5 h-5 rounded-sm bg-cartBg text-gray-50 flex items-center justify-center">
-          {qty}
-        </p>
-
-        <motion.div
-          whileTap={{ scale: 0.75 }}
-          onClick={() => updateQty("add", item?.item._id)}
-        >
-          <BiPlus className="text-gray-50 " />
-        </motion.div>
+            {/* button section */}
+            <div className="group flex items-center gap-2 ml-auto cursor-pointer">
+              {addon.quantity}
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );

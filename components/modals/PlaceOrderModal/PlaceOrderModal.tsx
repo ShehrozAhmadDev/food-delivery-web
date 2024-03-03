@@ -19,7 +19,6 @@ const initialOrderData = {
 };
 function PlaceOrderModal({ loading, isOpen, closeModal }: MenuModalProps) {
   const { items } = useAppSelector((state) => state.cartReducer.value);
-  console.log(items);
   const [orderData, setOrderData] = useState<IOrders>(initialOrderData);
 
   const handleFieldChange = (e: any) => {
@@ -29,15 +28,25 @@ function PlaceOrderModal({ loading, isOpen, closeModal }: MenuModalProps) {
     }));
   };
   const calculateTotalPrice = (cartItems: ICartItem[]) => {
-    return cartItems.reduce((total, cartItem) => {
-      return total + cartItem.item.price * cartItem.quantity;
+    return cartItems.reduce((accumulator, item) => {
+      // Calculate the total price of the item including addons
+      const itemPrice = (item.quantity || 0) * item.item.price;
+
+      // Calculate the total price of addons
+      const addonsPrice = item.addOns.reduce(
+        (addonAccumulator, addon) =>
+          addonAccumulator + (addon.quantity || 0) * addon.addOnId.price,
+        0
+      );
+
+      // Add the total price of the item and addons to the accumulator
+      return accumulator + itemPrice + addonsPrice;
     }, 0);
   };
   const handleCreateNewOrder = async (e: any) => {
     try {
       e.preventDefault();
       const token = Cookie.get("token");
-      console.log(orderData);
       const data = await Orders.createNewOrder(orderData, token);
       if (data.status === 200) {
         closeModal();
@@ -49,11 +58,13 @@ function PlaceOrderModal({ loading, isOpen, closeModal }: MenuModalProps) {
   };
 
   useEffect(() => {
-    console.log(items);
     const menuItems = items.map((item) => {
       return {
         menuItemId: item.item._id,
         quantity: item.quantity,
+        addOns: item.addOns.map((addon) => {
+          return { addOnId: addon.addOnId._id, quantity: addon.quantity };
+        }),
       };
     });
     setOrderData((prevData) => ({
@@ -61,7 +72,6 @@ function PlaceOrderModal({ loading, isOpen, closeModal }: MenuModalProps) {
       items: menuItems,
     }));
   }, [items]);
-  console.log(orderData);
 
   return (
     <Modal
@@ -120,33 +130,63 @@ function PlaceOrderModal({ loading, isOpen, closeModal }: MenuModalProps) {
                   {items.length > 0 ? (
                     <div>
                       {items.map((cartItem, index) => (
-                        <div
-                          key={index}
-                          className="mb-4 p-4 bg-[#2f2f2f] rounded-md flex items-center"
-                        >
-                          <img
-                            src={cartItem.item.imageUrl}
-                            alt={cartItem.item.name}
-                            className="w-16 h-16 object-cover rounded-md mr-4"
-                          />
+                        <div>
+                          <div
+                            key={index}
+                            className="mb-4 p-4 bg-[#2f2f2f] rounded-md flex items-center"
+                          >
+                            <img
+                              src={cartItem.item.imageUrl}
+                              alt={cartItem.item.name}
+                              className="w-16 h-16 object-cover rounded-md mr-4"
+                            />
+                            <div>
+                              <h3 className="text-lg font-semibold">
+                                {cartItem.item.name}
+                              </h3>
+                              <p className="text-gray-200">
+                                {cartItem.item.description}
+                              </p>
+                              <p className="text-gray-200 mt-1">
+                                Quantity: {cartItem.quantity} - Total: Rs.
+                                {cartItem.item.price * cartItem.quantity}
+                              </p>
+                            </div>
+                          </div>
                           <div>
-                            <h3 className="text-lg font-semibold">
-                              {cartItem.item.name}
-                            </h3>
-                            <p className="text-gray-200">
-                              {cartItem.item.description}
-                            </p>
-                            <p className="text-gray-200 mt-1">
-                              Quantity: {cartItem.quantity} - Total: $
-                              {cartItem.item.price * cartItem.quantity}
-                            </p>
+                            {cartItem.addOns.map((addon, id) => (
+                              <div
+                                key={id}
+                                className="mb-4 p-4 bg-[#2f2f2f] rounded-md flex items-center"
+                              >
+                                <img
+                                  src={addon.addOnId.imageUrl}
+                                  alt={addon.addOnId.name}
+                                  className="w-6 h-6 object-cover rounded-md mr-4"
+                                />
+                                <div className="w-full justify-between flex">
+                                  <div>
+                                    <h3 className="text-lg font-semibold">
+                                      {addon.addOnId.name}
+                                    </h3>
+                                    <p className="text-gray-200 mt-1">
+                                      Quantity: {addon.quantity} - Total: Rs.
+                                      {addon.addOnId.price * addon.quantity}
+                                    </p>
+                                  </div>
+                                  <div className="bg-red-700 h-fit text-white text-sm p-1 rounded-lg">
+                                    Addon
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
                           </div>
                         </div>
                       ))}
 
                       <div className="mt-4">
                         <p className="text-lg font-semibold">
-                          Total Price: ${calculateTotalPrice(items)}
+                          Total Price: Rs {calculateTotalPrice(items)}
                         </p>
                         {/* Add checkout or place order button here */}
                       </div>
@@ -159,7 +199,7 @@ function PlaceOrderModal({ loading, isOpen, closeModal }: MenuModalProps) {
 
               <button
                 type="submit"
-                className="w-full bg-gradient-to-r from-orange-600 to-yellow-400 py-3 rounded-md hover:opacity-80 transition-all duration-300"
+                className="w-full bg-gradient-to-r from-red-600 to-yellow-400 py-3 rounded-md hover:opacity-80 transition-all duration-300"
               >
                 Place Order
               </button>

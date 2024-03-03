@@ -34,12 +34,12 @@ body {
 
 ::-webkit-scrollbar {
   width: 8px; 
-  background-color: rgb(184, 135, 97); /* Set the color of the scrollbar thumb */
+  background-color: rgb(184, 97, 97); /* Set the color of the scrollbar thumb */
 
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: rgb(255, 123, 0); 
+  background-color: rgb(255, 0, 0); 
   border-radius: 2px;
 }
 

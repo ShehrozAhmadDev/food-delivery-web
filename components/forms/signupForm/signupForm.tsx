@@ -64,7 +64,7 @@ const SignupForm = ({
           </div>
           <button
             type="submit"
-            className="w-full h-[50px] flex items-center justify-center bg-gradient-to-r from-orange-600 to-orange-300 text-white py-3 rounded-md hover:opacity-80 transition-all duration-300"
+            className="w-full h-[50px] flex items-center justify-center bg-gradient-to-r from-red-600 to-red-300 text-white py-3 rounded-md hover:opacity-80 transition-all duration-300"
           >
             Sign Upx
           </button>
@@ -74,7 +74,7 @@ const SignupForm = ({
             You already have an account?
           </p>
           <p
-            className="underline w-fit font-bold cursor-pointer  text-orange-500 hover:opacity-85 "
+            className="underline w-fit font-bold cursor-pointer  text-red-500 hover:opacity-85 "
             onClick={() => router.push("/login")}
           >
             Login

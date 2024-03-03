@@ -9,6 +9,7 @@ export interface IMessage {
 export interface ICartItem {
     item: IMenu,
     quantity: number;
+    addOns: { addOnId: IAddOnItem; quantity: number }[]
 }
 
 
@@ -20,7 +21,7 @@ export interface IOrders {
     status?: string;
     phone: string;
     city: string;
-    item?: {menuItem: IMenu, quantity: number, addOns: IAddOnItem[]}[]
+    item?: {menuItem: IMenu, quantity: number, addOns: { addOnId: IAddOnItem; quantity: number }[]}[]
     createdBy?: IUser;
     createdAt?: string | Date;
     updatedAt?: string | Date;
@@ -34,6 +35,8 @@ export interface IOrders {
     category: string,
     price: number,
     createdBy: string | userI,
+    imageUrl?: string;
+
   }
 
   export interface IMenu {

@@ -4,6 +4,7 @@ import storage from "redux-persist/lib/storage";
 import userSlice from "../features/user-slice";
 import cartSlice from "../features/cart-slice";
 import menuReducer from "../features/menu-slice";
+import addonReducer from "../features/addon-slice";
 
 import { TypedUseSelectorHook, useSelector } from "react-redux";
 
@@ -20,7 +21,8 @@ export const store = configureStore({
   reducer: {
     userReducer,
     cartReducer,
-    menuReducer
+    menuReducer,
+    addonReducer
   },
 });
 export const persistor = persistStore(store);
