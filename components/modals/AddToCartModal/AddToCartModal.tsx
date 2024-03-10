@@ -156,7 +156,7 @@ function AddToCartModal({ loading, isOpen, closeModal }: AddtoCartModalProps) {
       overlayClassName="fixed inset-0 bg-black bg-opacity-25 backdrop-filter backdrop-blur-sm flex justify-center items-center"
       ariaHideApp={false}
     >
-      <div className="w-[600px]">
+      <div className="w-[375px] md:w-[600px]">
         <div className="max-h-[calc(100vh-250px)] overflow-y-auto no-scrollbar text-white px-5">
           <h1 className="mx-auto my-3 text-2xl text-center">Add to Cart</h1>
           <div className="mb-6 flex flex-col gap-y-5">

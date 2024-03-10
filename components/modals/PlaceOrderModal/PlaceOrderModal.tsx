@@ -82,7 +82,7 @@ function PlaceOrderModal({ loading, isOpen, closeModal }: MenuModalProps) {
       overlayClassName="fixed inset-0 bg-black bg-opacity-25 backdrop-filter backdrop-blur-sm flex justify-center items-center"
       ariaHideApp={false}
     >
-      <div className="w-[600px]">
+      <div className="w-[375px] md:w-[600px]">
         {loading ? (
           <p className="text-white font-bold my-2">Loading....</p>
         ) : (

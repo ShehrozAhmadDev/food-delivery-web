@@ -1,19 +1,23 @@
 import React from "react";
 import Delivery from "@/public/img/delivery.png";
 import HeroBg from "@/public/img/heroBg.png";
-import { heroData } from "@/constants/data";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/swiper-bundle.css";
+import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import Image from "next/image";
-import Link from "next/link";
+
+// Sample images for testing
+const images = ["/img/deal.jpg", "/img/deal2.jpg", "/img/deal1.jpg"];
 
 const HomeContainer = () => {
   return (
     <section
-      className="grid grid-cols-1 md:grid-cols-2 gap-2 w-full "
+      className="grid grid-cols-1 md:grid-cols-2 gap-2 w-full h-[600px]"
       id="home"
     >
       <div className="py-2 flex-1 flex flex-col items-start justify-center gap-6">
         <div className="flex items-center gap-2 justify-center bg-red-100 px-4 py-1 rounded-full">
-          <p className="text-base text-red-500 font-semibold">Bike Delivery</p>
+          <p className="text-base text-red-500 font-semibold">Fast Delivery</p>
           <div className="w-8 h-8 bg-white rounded-full overflow-hidden drop-shadow-xl">
             <Image
               src={Delivery}
@@ -25,9 +29,6 @@ const HomeContainer = () => {
 
         <p className="text-[2.5rem] lg:text-[4.5rem] font-bold tracking-wide text-headingColor">
           ACNC Kitchen
-          <span className="text-red-600 text-[3rem] lg:text-[5rem] ml-5">
-            Lahore
-          </span>
         </p>
 
         <p className="text-base text-textColor text-center md:text-left md:w-[80%]">
@@ -37,46 +38,37 @@ const HomeContainer = () => {
           suscipit!
         </p>
 
-        <Link
+        <a
           href={"/menu"}
-          type="button"
           className="bg-gradient-to-br from-red-400 to-red-500 w-full md:w-auto px-4 py-2  rounded-lg hover:shadow-lg transition-all ease-in-out duration-100"
         >
           Order Now
-        </Link>
+        </a>
       </div>
       <div className="py-2 flex-1 flex items-center relative">
-        <Image
-          src={HeroBg}
-          className=" ml-auto h-420 w-full lg:w-auto lg:h-650"
-          alt="hero-bg"
-        />
-
-        <div className="w-full h-full absolute top-0 left-0 flex items-center justify-center lg:px-32  py-4 gap-4 flex-wrap">
-          {heroData &&
-            heroData.map((n) => (
-              <div
-                key={n.id}
-                className="  lg:w-190  p-4 bg-cardOverlay backdrop-blur-md rounded-3xl flex flex-col items-center justify-center drop-shadow-lg"
-              >
-                <Image
-                  src={n.imageSrc}
-                  className="w-20 lg:w-40 -mt-10 lg:-mt-20 "
-                  alt="I1"
+        <div className="w-full h-full absolute top-0 left-0 flex items-center justify-center lg:px-10 py-4 gap-4 flex-wrap">
+          <Swiper
+            slidesPerView={1}
+            spaceBetween={10}
+            modules={[Navigation, Pagination, Autoplay]}
+            loop={true}
+            autoplay={{
+              delay: 3000,
+              disableOnInteraction: false,
+            }}
+            pagination={{ clickable: true }}
+            className="mySwiper"
+          >
+            {images.map((image, index) => (
+              <SwiperSlide key={index} className="rounded-2xl">
+                <img
+                  src={image}
+                  alt={"Food Image"}
+                  className="w-full h-auto rounded-2xl"
                 />
-                <p className="text-base lg:text-xl font-semibold text-textColor mt-2 lg:mt-4">
-                  {n.name}
-                </p>
-
-                <p className="text-[12px] lg:text-sm text-lighttextGray font-semibold my-1 lg:my-3">
-                  {n.decp}
-                </p>
-
-                <p className="text-sm font-semibold text-headingColor">
-                  <span className="text-xs text-red-600">$</span> {n.price}
-                </p>
-              </div>
+              </SwiperSlide>
             ))}
+          </Swiper>
         </div>
       </div>
     </section>
