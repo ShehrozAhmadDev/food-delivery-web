@@ -152,8 +152,8 @@ function AddToCartModal({ loading, isOpen, closeModal }: AddtoCartModalProps) {
         setQuantity(1);
       }}
       contentLabel="Add to cart"
-      className="absolute top-1/2 left-1/2 transform focus:outline-none -translate-x-1/2 -translate-y-1/2 bg-black p-10 rounded-lg shadow-lg"
-      overlayClassName="fixed inset-0 bg-black bg-opacity-25 backdrop-filter backdrop-blur-sm flex justify-center items-center"
+      className="absolute top-1/2 z-10 left-1/2 transform focus:outline-none -translate-x-1/2 -translate-y-1/2 bg-black p-10 rounded-lg shadow-lg"
+      overlayClassName="fixed z-10 inset-0 bg-black bg-opacity-25 backdrop-filter backdrop-blur-sm flex justify-center items-center"
       ariaHideApp={false}
     >
       <div className="w-[375px] md:w-[600px]">

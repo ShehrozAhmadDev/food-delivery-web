@@ -32,21 +32,23 @@ const HomeContainer = () => {
         </p>
 
         <p className="text-base text-textColor text-center md:text-left md:w-[80%]">
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Minima velit
-          eaque fugit distinctio est nam voluptatum architecto, porro iusto
-          deserunt recusandae ipsa minus eos sunt, dolores illo repellat facere
-          suscipit!
+          "Welcome to ACNC Kitchen, where flavor and convenience collide! Our
+          delectable menu is packed with mouthwatering delights that will
+          satisfy your cravings. From our juicy burgers to our crispy fries,
+          every bite is a taste sensation. Join us for a fast food experience
+          like no other. Get ready to indulge in pure deliciousness at ACNC
+          Kitchen!" 🍔🍟😋
         </p>
 
         <a
           href={"/menu"}
-          className="bg-gradient-to-br from-red-400 to-red-500 w-full md:w-auto px-4 py-2  rounded-lg hover:shadow-lg transition-all ease-in-out duration-100"
+          className="bg-gradient-to-br from-red-400 to-red-500 w-full md:w-auto px-4 py-2 justify-center flex rounded-lg hover:shadow-lg transition-all ease-in-out duration-100"
         >
           Order Now
         </a>
       </div>
       <div className="py-2 flex-1 flex items-center relative">
-        <div className="w-full h-full absolute top-0 left-0 flex items-center justify-center lg:px-10 py-4 gap-4 flex-wrap">
+        <div className="w-full h-full  top-0 left-0 flex items-center justify-center lg:px-10 py-4 gap-4 flex-wrap">
           <Swiper
             slidesPerView={1}
             spaceBetween={10}

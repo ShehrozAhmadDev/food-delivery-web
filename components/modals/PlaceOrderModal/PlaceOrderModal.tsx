@@ -78,8 +78,8 @@ function PlaceOrderModal({ loading, isOpen, closeModal }: MenuModalProps) {
       isOpen={isOpen}
       onRequestClose={closeModal}
       contentLabel="Add Menu"
-      className="absolute top-1/2 left-1/2 transform focus:outline-none -translate-x-1/2 -translate-y-1/2 bg-black p-10 rounded-lg shadow-lg"
-      overlayClassName="fixed inset-0 bg-black bg-opacity-25 backdrop-filter backdrop-blur-sm flex justify-center items-center"
+      className="absolute z-10 top-1/2 left-1/2 transform focus:outline-none -translate-x-1/2 -translate-y-1/2 bg-black p-10 rounded-lg shadow-lg"
+      overlayClassName="fixed z-10 inset-0 bg-black bg-opacity-25 backdrop-filter backdrop-blur-sm flex justify-center items-center"
       ariaHideApp={false}
     >
       <div className="w-[375px] md:w-[600px]">
