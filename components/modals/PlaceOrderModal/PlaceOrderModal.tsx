@@ -69,9 +69,11 @@ function PlaceOrderModal({ loading, isOpen, closeModal }: MenuModalProps) {
     });
     setOrderData((prevData) => ({
       ...prevData,
+      price: calculateTotalPrice(items),
       items: menuItems,
     }));
   }, [items]);
+  console.log(orderData)
 
   return (
     <Modal

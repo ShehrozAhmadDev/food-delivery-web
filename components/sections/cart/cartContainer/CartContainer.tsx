@@ -87,24 +87,16 @@ const CartContainer = () => {
                 <CartItemComp flag={flag} setFlag={setFlag} item={item} />
               ))}
           </div>
-
-          {/* cart total section */}
           <div className="w-full py-3 bg-cartTotal rounded-t-[2rem] flex flex-col items-center justify-evenly px-8 py-1">
             <div className="w-full flex items-center justify-between">
               <p className="text-gray-400 text-lg">Sub Total</p>
               <p className="text-gray-400 text-lg">Rs. {tot}</p>
             </div>
-            <div className="w-full flex items-center justify-between">
-              <p className="text-gray-400 text-lg">Delivery</p>
-              <p className="text-gray-400 text-lg">Rs. 50</p>
-            </div>
-
             <div className="w-full border-b border-gray-600 my-2"></div>
-
             <div className="w-full flex items-center justify-between">
               <p className="text-gray-200 text-xl font-semibold">Total</p>
               <p className="text-gray-200 text-xl font-semibold">
-                Rs. {tot + 50}
+                Rs. {tot }
               </p>
             </div>
 

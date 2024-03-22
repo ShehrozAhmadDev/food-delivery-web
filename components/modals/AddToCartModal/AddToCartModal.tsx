@@ -113,34 +113,6 @@ function AddToCartModal({ loading, isOpen, closeModal }: AddtoCartModalProps) {
 
     setFlag(flag + 1);
     cartDispatch(updatedItems);
-    // if (quantity === 1) {
-    //   const updatedItems = cartItems
-    //     .map((cartItem) => {
-    //       if (cartItem.item._id === selectedItem?.item._id) {
-    //         if (cartItem.quantity && cartItem.quantity > 1) {
-    //           return { ...cartItem, quantity: cartItem.quantity - 1 };
-    //         }
-    //       }
-    //       return cartItem;
-    //     })
-    //     .filter((cartItem) => cartItem.item._id !== selectedItem?.item._id);
-
-    //   setFlag(flag + 1);
-    //   cartDispatch(updatedItems);
-    // } else {
-    //   setQuantity(quantity - 1);
-    //   const updatedItems = cartItems.map((cartItem) => {
-    //     if (cartItem.item._id === selectedItem?.item._id) {
-    //       if (cartItem.quantity) {
-    //         return { ...cartItem, quantity: cartItem.quantity - 1 };
-    //       }
-    //     }
-    //     return cartItem;
-    //   });
-
-    //   setFlag(flag + 1);
-    //   cartDispatch(updatedItems);
-    // }
   };
 
   return (

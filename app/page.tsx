@@ -11,7 +11,6 @@ import Menu from "@/services/menu";
 import Cookie from "js-cookie";
 import { useDispatch } from "react-redux";
 import { setMenu } from "@/redux/features/menu-slice";
-import CartContainer from "@/components/sections/cart/cartContainer/CartContainer";
 import AddToCartModal from "@/components/modals/AddToCartModal/AddToCartModal";
 import Addon from "@/services/addon";
 import { setAddon } from "@/redux/features/addon-slice";
