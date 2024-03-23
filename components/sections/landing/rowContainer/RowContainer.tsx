@@ -61,7 +61,7 @@ const RowContainer = ({
         data.map((item) => (
           <div
             key={item?._id}
-            className="min-w-[150px] min-h-[250px] md:h-[350px]  md:w-400 md:min-w-[400px] bg-red-700 rounded-2xl py-4 px-6 my-12 backdrop-blur-lg hover:drop-shadow-lg flex flex-col items-center justify-between relative"
+            className="min-w-[200px] min-h-[300px] h-[300px] md:h-[350px]  md:w-400 md:min-w-[400px] bg-red-700 rounded-2xl py-4 px-6 my-12 backdrop-blur-lg hover:drop-shadow-lg flex flex-col items-center justify-between relative"
           >
             <div className="w-full flex items-center justify-center">
               <motion.div
