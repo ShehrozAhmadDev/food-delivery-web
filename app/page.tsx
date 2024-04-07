@@ -14,6 +14,7 @@ import { setMenu } from "@/redux/features/menu-slice";
 import AddToCartModal from "@/components/modals/AddToCartModal/AddToCartModal";
 import Addon from "@/services/addon";
 import { setAddon } from "@/redux/features/addon-slice";
+import Banner from "@/services/banner";
 
 const Home = () => {
   let token = Cookie?.get("token");
@@ -22,6 +23,8 @@ const Home = () => {
   const [openCartModal, setOpenCartModal] = useState(false);
   const [clickedItem, setClickedItem] = useState();
   const { items } = useAppSelector((state) => state.cartReducer.value);
+  const [banners, setBanners] = useState([]);
+
   const { menu, filteredMenu, categories, featuredMenu } = useAppSelector(
     (state) => state.menuReducer.value
   );
@@ -46,15 +49,28 @@ const Home = () => {
       console.log(error);
     }
   };
+
+
+  const getAllBannerItems = async () => {
+    try {
+      const data = await Banner.getAllBannerItems();
+      if (data?.status === 200) {
+        setBanners(data.banner);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   useEffect(() => {
     getAllMenuItems();
     getAllAddonItems();
+    getAllBannerItems();
   }, []);
 
   return (
     <MainContainer>
       <div className="w-full h-auto flex flex-col items-center justify-center ">
-        <HomeContainer />
+        <HomeContainer bannerData = {banners} />
 
         <section className="w-full mt-60 my-12 md:my-6">
           <div className="w-full flex items-center justify-between">

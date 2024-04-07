@@ -5,12 +5,13 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Navigation, Pagination } from "swiper/modules";
 import Image from "next/image";
+import { IBanner } from "@/services/banner";
 
 interface IFoodCarousel {
-  images: string[];
+  bannerData: IBanner[];
 }
 
-const FoodCarousel = ({ images }: IFoodCarousel) => {
+const FoodCarousel = ({ bannerData }: IFoodCarousel) => {
   return (
     <Swiper
       slidesPerView={1}
@@ -27,12 +28,12 @@ const FoodCarousel = ({ images }: IFoodCarousel) => {
       modules={[Pagination, Navigation]}
       className={`mySwiper `} // Apply CSS module class
     >
-      {images.map((image, index) => (
+      {bannerData.map((image, index) => (
         <SwiperSlide key={index}>
           <Image
-            src={image}
+            src={image.imageUrl}
             alt={`Food ${index + 1}`}
-            className="w-screen h-[470px] object-cover "
+            className="w-screen h-[470px] object-contain "
             width={400}
             height={400}
           />

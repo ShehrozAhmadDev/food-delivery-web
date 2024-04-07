@@ -2,7 +2,7 @@
 import Link from "next/link";
 import React, { useState } from "react";
 import Cookie from "js-cookie";
-import Logo from "@/public/img/acnc.svg";
+import Logo from "@/public/img/acnc.png";
 import Avatar from "@/public/img/avatar.png";
 import { MdLogout, MdShoppingCart } from "react-icons/md";
 import { motion } from "framer-motion";
@@ -49,7 +49,7 @@ const Header = () => {
       {/* desktop & tablet */}
       <div className="hidden md:flex w-full h-full items-center justify-between">
         <Link href={"/"} className="flex items-center gap-2">
-          <Image src={Logo} className="w-16 object-cover" alt="logo" />
+          <Image src={Logo} className="w-20 object-cover" alt="logo" />
           <p className="text-headingColor text-xl font-bold"> ACNC Kitchen</p>
         </Link>
 

@@ -5,11 +5,16 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/swiper-bundle.css";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import Image from "next/image";
+import { IBanner } from "@/services/banner";
 
 // Sample images for testing
 const images = ["/img/deal.jpg", "/img/deal2.jpg", "/img/deal1.jpg"];
 
-const HomeContainer = () => {
+
+export interface IHome {
+  bannerData: IBanner[]
+}
+const HomeContainer = ({bannerData}: IHome) => {
   return (
     <section
       className="grid grid-cols-1 md:grid-cols-2 gap-2 w-full h-[600px]"
@@ -61,12 +66,12 @@ const HomeContainer = () => {
             pagination={{ clickable: true }}
             className="mySwiper"
           >
-            {images.map((image, index) => (
+            {bannerData?.map((image: IBanner, index) => (
               <SwiperSlide key={index} className="rounded-2xl">
                 <img
-                  src={image}
+                  src={image.imageUrl}
                   alt={"Food Image"}
-                  className="w-full h-auto rounded-2xl"
+                  className="w-full h-[400px] object-contain rounded-2xl"
                 />
               </SwiperSlide>
             ))}

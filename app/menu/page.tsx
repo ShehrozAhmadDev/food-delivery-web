@@ -13,10 +13,12 @@ import FoodCarousel from "@/components/sections/carousel/foodCarousel/FoodCarous
 import Menu from "@/services/menu";
 import { setMenu } from "@/redux/features/menu-slice";
 import AddToCartModal from "@/components/modals/AddToCartModal/AddToCartModal";
+import Banner from "@/services/banner";
 
 const MenuPage = () => {
   const { menu } = useAppSelector((state) => state.menuReducer.value);
   const [openCartModal, setOpenCartModal] = useState(false);
+  const [banners, setBanners] = useState([]);
 
   const dispatch = useDispatch();
   const { items: cartItems } = useAppSelector(
@@ -35,13 +37,25 @@ const MenuPage = () => {
       console.log(error);
     }
   };
+
+  const getAllBannerItems = async () => {
+    try {
+      const data = await Banner.getAllBannerItems();
+      if (data?.status === 200) {
+        setBanners(data.banner);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   useEffect(() => {
     getAllMenuItems();
+    getAllBannerItems();
   }, []);
   return (
     <MainContainer>
       <div className="my-10">
-        <FoodCarousel images={images} />
+        <FoodCarousel bannerData={banners} />
       </div>
 
       <h1 className="text-3xl text-white text-center font-bold ">Menu Items</h1>
