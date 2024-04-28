@@ -49,7 +49,7 @@ const Header = () => {
       {/* desktop & tablet */}
       <div className="hidden md:flex w-full h-full items-center justify-between">
         <Link href={"/"} className="flex items-center gap-2">
-          <Image src={Logo} className="w-20 object-cover" alt="logo" />
+          <Image src={Logo} className="w-[125px] object-cover" alt="logo" />
           <p className="text-headingColor text-xl font-bold"> ACNC Kitchen</p>
         </Link>
 

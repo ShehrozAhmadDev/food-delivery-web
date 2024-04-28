@@ -18,6 +18,7 @@ const LoginForm = () => {
     e.preventDefault();
     Login.postLogin(email, password)
       .then((data) => {
+        if(data.status===200){
         Cookie.set("token", data?.token);
         Cookie.set("role", data?.user?.role);
         dispatch(
@@ -30,6 +31,7 @@ const LoginForm = () => {
         toast.success("Logged In...");
         router.push("/");
         router.refresh();
+      }
       })
       .catch((err) => {
         console.log(err);
